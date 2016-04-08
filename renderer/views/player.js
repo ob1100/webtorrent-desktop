@@ -54,6 +54,18 @@ function renderMedia (state) {
     state.playing.volume = mediaElement.volume
   }
 
+  // Add subtitles to the <video> tag
+  var trackTag
+  if (state.playing.subtitles) {
+    trackTag = hx`
+      <track
+        default='default'
+        label='Subtitles'
+        type='subtitles'
+        src=${state.playing.subtitles}>
+    `
+  }
+
   // Create the <audio> or <video> tag
   var mediaTag = hx`
     <div
@@ -66,9 +78,10 @@ function renderMedia (state) {
       onstalling=${dispatcher('mediaStalled')}
       ontimeupdate=${dispatcher('mediaTimeUpdate')}
       autoplay>
+      ${trackTag}
     </div>
   `
-  mediaTag.tagName = mediaType
+  mediaTag.tagName = mediaType // conditional tag name
 
   // Show the media.
   return hx`
